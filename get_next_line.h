@@ -6,7 +6,7 @@
 /*   By: wimam <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 18:10:58 by wimam             #+#    #+#             */
-/*   Updated: 2024/11/09 18:10:58 by wimam            ###   ########.fr       */
+/*   Updated: 2024/11/10 00:21:19 by wimam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,8 @@
 #include <fcntl.h>
 
 char	*get_next_line(int fd);
-void	*ft_memset(void *b, int c, size_t len);
-size_t	ft_strlen(const char *s);
-char	*ft_join(char *s1, char *s2);
-int		eol(char *str);
-char	*get_later(char *str);
+int		ft_new_line_check(char *str);
+char	*ft_split(char *str, char *ret);
+char	*ft_strjoin(char *s1, char *s2);
 
 #endif

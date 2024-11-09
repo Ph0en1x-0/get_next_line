@@ -6,34 +6,32 @@
 /*   By: wimam <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 18:11:05 by wimam             #+#    #+#             */
-/*   Updated: 2024/11/09 18:19:35 by wimam            ###   ########.fr       */
+/*   Updated: 2024/11/10 00:38:15 by wimam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*get_line(fd)
+char	*get_line(int fd)
 {
-	char	*tmp;
-	char	*buffer;
-	char	static	*later;
-
-	tmp = malloc(BUFFER_SIZE + 1);
-	buffer = malloc(1);
+	static	char	*later;
+	char			*buffer;
+	char			*tmp;
 	
-	ft_memset(buffer, '\0', 1);
-	while (TRUE)
+	buffer = malloc(1);
+	buffer[0] = 0;
+	if (ft_new_line_check(later))
 	{
-		read(fd, tmp, BUFFER_SIZE);
-		tmp[BUFFER_SIZE + 1] = '\0';
-		if (eol(tmp))
-			break ;
-		buffer = ft_join(buffer, tmp);
+		buffer = ft_split(later, "now");
+		later = ft_split(later, "later");
+		return(buffer);
 	}
-	buffer = ft_join(later, buffer);
-	buffer = ft_join(buffer, "\n");
-	later = get_later(tmp);
-	return(buffer);
+	tmp = malloc(BUFFER_SIZE + 1);
+	while (ft_new_line_check(later) && read(fd, tmp, BUFFER_SIZE) > 0)
+		buffer = ft_strjoin(buffer, tmp);
+	buffer = ft_strjoin(buffer, ft_split(tmp, "now"));
+	later = ft_split(tmp, later);
+	return (buffer);
 }
 
 char	*get_next_line(int fd)

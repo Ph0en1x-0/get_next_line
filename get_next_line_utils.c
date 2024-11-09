@@ -6,89 +6,109 @@
 /*   By: wimam <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 18:10:46 by wimam             #+#    #+#             */
-/*   Updated: 2024/11/09 18:20:14 by wimam            ###   ########.fr       */
+/*   Updated: 2024/11/10 00:38:27 by wimam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	*ft_memset(void *b, int c, size_t len)
+static	int	ft_strcmp(const char *s1, const char *s2)
 {
-	size_t		i;
-	unsigned char *buffer;
+	size_t	i;
 
-	buffer = (unsigned char *)b;
 	i = 0;
-	while (i < len)
-	{
-		buffer[i] = (unsigned char)c;
+	while (s1[i] && s1[i] == s2[i])
 		i++;
-	}
-	return (b);
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
-
-size_t	ft_strlen(const char *s)
+static	int	ft_strlen(const char *s)
 {
-	size_t	len;
-	
-	if (!s)
-		return (0);
+	int	len;
+
 	len = 0;
 	while (s[len] != '\0')
 		len++;
 	return (len);
 }
-
-char	*ft_join(char *s1, char *s2)
+static	char	*ft_charjoin(char *str, char c)
 {
 	char	*buffer;
 	int		i;
-	int		j;
 
-	if(!s2)
-		return (s1);
-	if (!s1)
-	{
-		s1 = malloc(1);
-		*s1 = '\0';
-	}
-	buffer = malloc(BUFFER_SIZE + ft_strlen(s1) + 1);
-	if (!buffer)
-		return (NULL);
+	buffer = malloc(ft_strlen(str) + 2);
 	i = 0;
-	while(s1[i] != '\0')
+	while (str[i] != '\0')
 	{
-		buffer[i] = s1[i];
+		buffer[i] = str[i];
 		i++;
 	}
-	j = 0;
-	while (j < BUFFER_SIZE)
-	{
-		buffer[i + j] = s2[j];
-		j++;
-	}
-	buffer[i + j] = '\0';
-	free(s1); 
+	buffer[i++] = c;
+	buffer[i] = '\0';
+	free(str);
 	return (buffer);
 }
 
-int		eol(char *str) //end of line
+int		ft_new_line_check(char *str)
 {
-	int	i;
-
-	i = 0;
-	while (str[i] != '\n' && i < BUFFER_SIZE)
-		i++;
-	if(i == BUFFER_SIZE)
-		return (1);
+	if (!str)
+		return (0);
+	while (*str)
+	{
+		if(*str == '\n')
+			return (1);
+		str++;
+	}
 	return (0);
 }
 
-char	*get_later(char *str) // Returns the pointer after the newline
+char	*ft_split(char *str, char *ret)
 {
-	while (*str != '\n' && *str != '\0')
+	char	*buffer;
+	int		i;
+	
+	buffer = malloc(1);
+	buffer[0] = '\0';
+	i = 0;
+	while (*str && *str != '\n')
+	{
+		buffer = ft_charjoin(buffer, *str);
 		str++;
-	if (*str == '\n')
-		str++;
-	return (str);
+		i++;
+	}
+	buffer[i] = '\n';
+	if (ft_strcmp(ret, "now"))
+		return (buffer);
+	else
+		free(buffer);
+	return (str++);
 }
+
+char	*ft_strjoin(char *s1, char *s2)
+{
+	char	*buffer;
+	int		i;
+
+	if(!s1)
+		return(s2);
+	buffer = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	i = 0;
+	while(*s1 != '\0')
+	{
+		buffer[i] = *s1;
+		s1++;
+		i++;
+	}
+	while(*s2 != '\0')
+	{
+		buffer[i] = *s2;
+		s2++;
+		i++;
+	}
+	free(s1);
+	free(s2);
+	buffer[i] = '\0';
+	return (buffer);
+}
+
+
+
