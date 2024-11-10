@@ -6,22 +6,16 @@
 /*   By: wimam <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 18:10:46 by wimam             #+#    #+#             */
-/*   Updated: 2024/11/10 00:38:27 by wimam            ###   ########.fr       */
+/*   Updated: 2024/11/10 17:43:51 by wimam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static	int	ft_strcmp(const char *s1, const char *s2)
-{
-	size_t	i;
 
-	i = 0;
-	while (s1[i] && s1[i] == s2[i])
-		i++;
-	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-}
-static	int	ft_strlen(const char *s)
+
+
+int	ft_strlen(const char *s)
 {
 	int	len;
 
@@ -30,12 +24,21 @@ static	int	ft_strlen(const char *s)
 		len++;
 	return (len);
 }
+
+
+
+
+
+
+
 static	char	*ft_charjoin(char *str, char c)
 {
 	char	*buffer;
 	int		i;
 
 	buffer = malloc(ft_strlen(str) + 2);
+	if (!buffer)
+		return (NULL);
 	i = 0;
 	while (str[i] != '\0')
 	{
@@ -47,6 +50,12 @@ static	char	*ft_charjoin(char *str, char c)
 	free(str);
 	return (buffer);
 }
+
+
+
+
+
+
 
 int		ft_new_line_check(char *str)
 {
@@ -61,52 +70,89 @@ int		ft_new_line_check(char *str)
 	return (0);
 }
 
-char	*ft_split(char *str, char *ret)
+
+
+
+
+
+
+char	*ft_init(char *s)
 {
-	char	*buffer;
-	int		i;
-	
-	buffer = malloc(1);
-	buffer[0] = '\0';
-	i = 0;
-	while (*str && *str != '\n')
+	if (!s)
 	{
-		buffer = ft_charjoin(buffer, *str);
-		str++;
+		char	*buffer;
+		buffer = malloc(1);
+		buffer[0] = '\0';
+		return (buffer);
+	}
+	else
+		return (s);
+}
+
+
+
+
+
+
+
+char	*ft_split(char *str, char ret)
+{
+	int		i;
+	char	*buffer;
+
+	buffer = ft_init(NULL);
+	i = 0;
+	while (str[i] != '\0' && str[i] != '\n')
+	{
+		buffer = ft_charjoin(buffer, str[i]);
 		i++;
 	}
-	buffer[i] = '\n';
-	if (ft_strcmp(ret, "now"))
+	if(str[i] == '\n')
+		buffer = ft_charjoin(buffer, '\n');
+	if(ret == 'b')
 		return (buffer);
-	else
-		free(buffer);
-	return (str++);
+	free(buffer);
+	i++;
+	return (&str[i]);
 }
+
+
+
+
+
+
+
 
 char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*buffer;
 	int		i;
+	int		j;
 
-	if(!s1)
+	if(*s1 == '\0')
 		return(s2);
+	else if (*s2 == '\0')
+		return (s1);
+	else if(!s1 || !s2)
+		return (NULL);
 	buffer = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!buffer)
+		return (NULL);
 	i = 0;
-	while(*s1 != '\0')
-	{
-		buffer[i] = *s1;
-		s1++;
-		i++;
-	}
-	while(*s2 != '\0')
-	{
-		buffer[i] = *s2;
-		s2++;
-		i++;
-	}
-	free(s1);
-	free(s2);
+	j = 0;
+	while (s1 && s1[i] != '\0')
+    {
+        buffer[i] = s1[i];
+        i++;
+    }
+    while (s2 && s2[j] != '\0')
+    {
+        buffer[i] = s2[j];
+        i++;
+        j++;
+    }
 	buffer[i] = '\0';
+	//free(s1);
 	return (buffer);
 }
 
