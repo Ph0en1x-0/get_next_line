@@ -6,7 +6,7 @@
 /*   By: wimam <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 18:11:05 by wimam             #+#    #+#             */
-/*   Updated: 2024/11/11 14:37:20 by wimam            ###   ########.fr       */
+/*   Updated: 2024/11/12 20:55:37 by wimam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,81 +14,96 @@
 
 char	*get_text(int fd)
 {
-	char	*tmp;
-	char	*buffer;
-	int		read_bytes;
-	int		total;
-	
-	tmp = malloc(BUFFER_SIZE + 1);
-	buffer = ft_init(NULL);
+	int	read_bytes;
+	int total_read_bytes;
+	char *buffer;
+	char *tmp;
+
 	read_bytes = 0;
-	total = 0;
-	while((read_bytes = read(fd, tmp, BUFFER_SIZE)) > 0)
+	total_read_bytes = 0;
+	tmp = malloc(BUFFER_SIZE);
+	buffer = ft_init(NULL);
+	while ((read_bytes = read(fd, tmp, BUFFER_SIZE)) > 0)
 	{
-		total += read_bytes;
-		tmp[BUFFER_SIZE] = '\0';
+		total_read_bytes += read_bytes;
 		buffer = ft_strjoin(buffer, tmp);
 	}
 	free(tmp);
-	buffer = ft_trim(buffer, total);
-	return(buffer);
+	buffer = ft_trim(buffer, total_read_bytes);
+	return (buffer);
 }
 
-int		ft_linenumbers(char	*text)
+char	*get_line(char	*text)
 {
-	int	num;
-
-	num = 0;
-	while(*text)
-	{
-		if (*text == '\n')
-			num++;
-		text++;
-	}
-	return (num);
-}
-
-char	*ft_get_line(char	*text, char ret)
-{
-	char	*buffer;
+	int		len;
 	int		i;
+	char 	*line;
 
+	len = 0;
+	while(text[len] != '\n' && text[len] != '\0')
+		len++;
+	line = malloc(len + 2); // (\n + \0) = 2
+	if (!line)
+		return (line);
 	i = 0;
-	buffer = ft_init(NULL);
-	while(text[i] != '\0' && text[i] != '\n')
+	while (i <= len)
 	{
-		buffer = ft_charjoin(buffer, text[i]);
+		line[i] = text[i];
 		i++;
 	}
-	if(ret == 'L')
-		return (buffer = ft_charjoin(buffer, '\n'));
-	else if (ret == 'T')
+	line[i] = '\0';
+	return (line);
+}
+
+char	*update_text(char *text)
+{
+	char	*newtext;
+	int		start;
+	int		len;
+	int		i;
+
+	start = 0;
+	while (text[start] != '\n')
 	{
-		free(buffer);
-		return (&text[i + 1]);
+		if (text[start] == '\0')
+		{
+			free(text);
+			return (NULL);
+		}
+		start++;
 	}
-	else
+	start++;
+	len = ft_strlen(&text[start]);
+	newtext = malloc(len + 1);
+	if (!newtext)
 		return (NULL);
+	i = 0;
+	while(i < len)
+	{
+		newtext[i] = text[start + i];
+		i++;	
+	}
+	newtext[len] = '\0';
+	free(text);
+	return (newtext);
 }
 
 char	*get_next_line(int fd)
 {
-	static	int		open;
-	static	int		maxline;
-	static	int		linei;
 	static	char	*text;
 	char			*line;
+	static	int		first_call;
 	
-	if(open == 0)
-	{
-		text = get_text(fd);
-		open = 1;
-		maxline = ft_linenumbers(text);
-	}
-	if(linei - 1 == maxline)
+	if (fd == -1)
 		return (NULL);
-	line = ft_get_line(text, 'L');
-	text = ft_get_line(text, 'T');
-	linei++;
+	if (first_call == 0)
+	{
+		first_call = 1;
+		text = get_text(fd);
+	}
+	if(!text)
+		return(NULL);
+	line = get_line(text);
+	text = update_text(text);
 	return (line);
 }

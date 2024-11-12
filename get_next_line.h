@@ -6,7 +6,7 @@
 /*   By: wimam <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 18:10:58 by wimam             #+#    #+#             */
-/*   Updated: 2024/11/11 14:27:44 by wimam            ###   ########.fr       */
+/*   Updated: 2024/11/12 19:37:17 by wimam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,8 @@
 
 char	*get_next_line(int fd);
 char	*ft_init(char *s);
-char	*get_text(int fd);
 char	*ft_strjoin(char *s1, char *s2);
-int		ft_strlen(const char *s);
-char	*ft_charjoin(char *str, char c);
-char	*ft_trim(char *str, int len);
+char	*ft_trim(char	*str, int max);
+int		ft_strlen(char *str);
 
 #endif
