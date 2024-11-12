@@ -6,7 +6,7 @@
 /*   By: wimam <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 18:10:46 by wimam             #+#    #+#             */
-/*   Updated: 2024/11/12 19:37:49 by wimam            ###   ########.fr       */
+/*   Updated: 2024/11/12 22:15:54 by wimam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,11 @@ char	*ft_trim(char	*str, int max)
 	buffer[i] = '\0';
 	free(str);
 	return (buffer);
+}
+
+int		is_fd_valid(int fd)
+{
+	if (fd < 0 || fcntl(fd, F_GETFL) == -1)
+		return 0; // Not valid	
+	return 1; // Valid
 }

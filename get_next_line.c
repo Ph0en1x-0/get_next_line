@@ -6,7 +6,7 @@
 /*   By: wimam <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 18:11:05 by wimam             #+#    #+#             */
-/*   Updated: 2024/11/12 20:55:37 by wimam            ###   ########.fr       */
+/*   Updated: 2024/11/12 22:15:39 by wimam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ char	*get_next_line(int fd)
 	char			*line;
 	static	int		first_call;
 	
-	if (fd == -1)
+	if (!is_fd_valid(fd))
 		return (NULL);
 	if (first_call == 0)
 	{
