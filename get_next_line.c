@@ -6,7 +6,7 @@
 /*   By: wimam <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 18:11:05 by wimam             #+#    #+#             */
-/*   Updated: 2024/11/12 22:42:43 by wimam            ###   ########.fr       */
+/*   Updated: 2024/11/13 00:07:49 by wimam            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,6 @@ char	*get_line(char	*text)
 		line[i] = text[i];
 		i++;
 	}
-	if (text[i] == '\0')
-		line[i - 1] = '\n';
 	line[i] = '\0';
 	return (line);
 }
@@ -65,9 +63,10 @@ char	*update_text(char *text)
 	int		i;
 
 	start = 0;
+	
 	while (text[start] != '\n')
 	{
-		if (text[start] == '\0')
+		if (text[start] == '\0') // for file with just line
 		{
 			free(text);
 			return (NULL);
@@ -76,6 +75,11 @@ char	*update_text(char *text)
 	}
 	start++;
 	len = ft_strlen(&text[start]);
+	if (len == 0)
+	{
+		free(text);
+		return (NULL);
+	}
 	newtext = malloc(len + 1);
 	if (!newtext)
 		return (NULL);
